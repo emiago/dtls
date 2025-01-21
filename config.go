@@ -224,6 +224,10 @@ type Config struct {
 	// checking against a list of blocked IPs, or counting the attempts to prevent brute force attacks.
 	// If the callback function returns an error, the connection attempt will be aborted.
 	OnConnectionAttempt func(net.Addr) error
+
+	// StopReaderAfterHandshake stops any further reading
+	// Should be set if you are only using for TLS keys exchange
+	StopReaderAfterHandshake bool
 }
 
 func (c *Config) includeCertificateSuites() bool {

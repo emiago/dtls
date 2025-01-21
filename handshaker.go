@@ -135,6 +135,8 @@ type handshakeConfig struct {
 	certificateRequestMessageHook func(handshake.MessageCertificateRequest) handshake.Message
 
 	resumeState *State
+
+	stopReaderAfterHandshake bool
 }
 
 type flightConn interface {

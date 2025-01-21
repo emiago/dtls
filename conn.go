@@ -40,6 +40,10 @@ const (
 	maxAppDataPacketQueueSize = 100
 )
 
+var (
+	errCancelReadStopped = errors.New("cancel read stopped")
+)
+
 func invalidKeyingLabels() map[string]bool {
 	return map[string]bool{
 		"client finished": true,
@@ -203,6 +207,7 @@ func createConn(
 		serverHelloMessageHook:        config.ServerHelloMessageHook,
 		certificateRequestMessageHook: config.CertificateRequestMessageHook,
 		resumeState:                   resumeState,
+		stopReaderAfterHandshake:      config.StopReaderAfterHandshake,
 	}
 
 	conn := &Conn{
@@ -1100,7 +1105,7 @@ func (c *Conn) handshake(
 	c.fsm = newHandshakeFSM(&c.state, c.handshakeCache, cfg, initialFlight)
 
 	done := make(chan struct{})
-	ctxRead, cancelRead := context.WithCancel(context.Background())
+	ctxRead, cancelRead := context.WithCancelCause(context.Background())
 	cfg.onFlightState = func(_ flightVal, s handshakeState) {
 		if s == handshakeFinished && c.setHandshakeCompletedSuccessfully() {
 			close(done)
@@ -1111,7 +1116,7 @@ func (c *Conn) handshake(
 
 	c.closeLock.Lock()
 	c.cancelHandshaker = cancel
-	c.cancelHandshakeReader = cancelRead
+	c.cancelHandshakeReader = func() { cancelRead(nil) }
 	c.closeLock.Unlock()
 
 	firstErr := make(chan error, 1)
@@ -1193,7 +1198,7 @@ func (c *Conn) handshake(
 						_ = c.close(false) //nolint:contextcheck
 					}
 				}
-				if !c.isConnectionClosed() && errors.Is(err, context.Canceled) {
+				if !c.isConnectionClosed() && errors.Is(err, context.Canceled) && context.Cause(ctxRead) != errCancelReadStopped {
 					c.log.Trace("handshake timeouts - closing underline connection")
 					_ = c.close(false) //nolint:contextcheck
 				}
@@ -1205,18 +1210,23 @@ func (c *Conn) handshake(
 
 	select {
 	case err := <-firstErr:
-		cancelRead()
+		cancelRead(nil)
 		cancel()
 		handshakeLoopsFinished.Wait()
 
 		return c.translateHandshakeCtxError(err)
 	case <-ctx.Done():
-		cancelRead()
+		cancelRead(nil)
 		cancel()
 		handshakeLoopsFinished.Wait()
 
 		return c.translateHandshakeCtxError(ctx.Err())
 	case <-done:
+		if c.handshakeConfig.stopReaderAfterHandshake {
+			cancelRead(errCancelReadStopped)
+			cancel()
+			handshakeLoopsFinished.Wait()
+		}
 		return nil
 	}
 }
