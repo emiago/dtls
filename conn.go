@@ -436,6 +436,18 @@ func (c *Conn) Close() error {
 	return err
 }
 
+func (c *Conn) CloseReader() error {
+	err := c.closeAll(true, true) //nolint:contextcheck
+	c.closeLock.Lock()
+	handshakeDone := c.handshakeDone
+	c.closeLock.Unlock()
+	if handshakeDone != nil {
+		<-handshakeDone
+	}
+
+	return err
+}
+
 // ConnectionState returns basic DTLS details about the connection.
 // Note that this replaced the `Export` function of v1.
 func (c *Conn) ConnectionState() (State, bool) {
@@ -1233,6 +1245,10 @@ func (c *Conn) translateHandshakeCtxError(err error) error {
 }
 
 func (c *Conn) close(byUser bool) error {
+	return c.closeAll(byUser, false)
+}
+
+func (c *Conn) closeAll(byUser bool, noCloseConn bool) error {
 	c.closeLock.Lock()
 	cancelHandshaker := c.cancelHandshaker
 	cancelHandshakeReader := c.cancelHandshakeReader
@@ -1262,6 +1278,11 @@ func (c *Conn) close(byUser bool) error {
 	}
 
 	if isClosed {
+		return nil
+	}
+
+	// Not closed but user does not want to close this connetion
+	if noCloseConn {
 		return nil
 	}
 
