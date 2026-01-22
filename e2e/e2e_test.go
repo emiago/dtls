@@ -22,10 +22,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/pion/dtls/v3"
-	"github.com/pion/dtls/v3/pkg/crypto/selfsign"
-	"github.com/pion/dtls/v3/pkg/protocol/extension"
-	"github.com/pion/dtls/v3/pkg/protocol/handshake"
+	"github.com/emiago/dtls/v3"
+	"github.com/emiago/dtls/v3/pkg/crypto/selfsign"
+	"github.com/emiago/dtls/v3/pkg/protocol/extension"
+	"github.com/emiago/dtls/v3/pkg/protocol/handshake"
 	"github.com/pion/transport/v4/test"
 	"github.com/stretchr/testify/assert"
 )

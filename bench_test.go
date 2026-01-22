@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/pion/dtls/v3/pkg/crypto/selfsign"
-	dtlsnet "github.com/pion/dtls/v3/pkg/net"
+	"github.com/emiago/dtls/v3/pkg/crypto/selfsign"
+	dtlsnet "github.com/emiago/dtls/v3/pkg/net"
 	"github.com/pion/logging"
 	"github.com/pion/transport/v4/dpipe"
 	"github.com/pion/transport/v4/test"

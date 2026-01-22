@@ -9,16 +9,16 @@ import (
 	"crypto/rand"
 	"crypto/x509"
 
-	"github.com/pion/dtls/v3/internal/ciphersuite"
-	"github.com/pion/dtls/v3/pkg/crypto/clientcertificate"
-	"github.com/pion/dtls/v3/pkg/crypto/elliptic"
-	"github.com/pion/dtls/v3/pkg/crypto/prf"
-	"github.com/pion/dtls/v3/pkg/crypto/signaturehash"
-	"github.com/pion/dtls/v3/pkg/protocol"
-	"github.com/pion/dtls/v3/pkg/protocol/alert"
-	"github.com/pion/dtls/v3/pkg/protocol/extension"
-	"github.com/pion/dtls/v3/pkg/protocol/handshake"
-	"github.com/pion/dtls/v3/pkg/protocol/recordlayer"
+	"github.com/emiago/dtls/v3/internal/ciphersuite"
+	"github.com/emiago/dtls/v3/pkg/crypto/clientcertificate"
+	"github.com/emiago/dtls/v3/pkg/crypto/elliptic"
+	"github.com/emiago/dtls/v3/pkg/crypto/prf"
+	"github.com/emiago/dtls/v3/pkg/crypto/signaturehash"
+	"github.com/emiago/dtls/v3/pkg/protocol"
+	"github.com/emiago/dtls/v3/pkg/protocol/alert"
+	"github.com/emiago/dtls/v3/pkg/protocol/extension"
+	"github.com/emiago/dtls/v3/pkg/protocol/handshake"
+	"github.com/emiago/dtls/v3/pkg/protocol/recordlayer"
 )
 
 //nolint:gocognit,gocyclo,lll,cyclop,maintidx

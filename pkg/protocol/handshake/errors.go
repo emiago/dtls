@@ -6,7 +6,7 @@ package handshake
 import (
 	"errors"
 
-	"github.com/pion/dtls/v3/pkg/protocol"
+	"github.com/emiago/dtls/v3/pkg/protocol"
 )
 
 // Typed errors.

@@ -6,7 +6,7 @@ package extension
 import (
 	"errors"
 
-	"github.com/pion/dtls/v3/pkg/crypto/elliptic"
+	"github.com/emiago/dtls/v3/pkg/crypto/elliptic"
 	"golang.org/x/crypto/cryptobyte"
 )
 

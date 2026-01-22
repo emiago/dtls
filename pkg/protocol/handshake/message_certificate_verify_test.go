@@ -6,8 +6,8 @@ package handshake
 import (
 	"testing"
 
-	"github.com/pion/dtls/v3/pkg/crypto/hash"
-	"github.com/pion/dtls/v3/pkg/crypto/signature"
+	"github.com/emiago/dtls/v3/pkg/crypto/hash"
+	"github.com/emiago/dtls/v3/pkg/crypto/signature"
 	"github.com/stretchr/testify/assert"
 )
 
